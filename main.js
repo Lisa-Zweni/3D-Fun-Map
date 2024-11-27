@@ -10,6 +10,24 @@ const mymap = L.map('map').setView([40.770116, -73.967909], 13);
     accessToken: apiKey
 }).addTo(mymap);
 
+async function fetchPOIs() {
+    try {
+        const response = await fetch('http://localhost:3000/api/pois');
+        const pois = await response.json();
+        pois.forEach(poi => {
+            const marker = new mapboxgl.Marker()
+                .setLngLat([poi.lng, poi.lat])
+                .setPopup(new mapboxgl.Popup().setHTML(`<h3>${poi.title}</h3><p>${poi.description}</p>`))
+                .addTo(map);
+        });
+    } catch (error) {
+        console.error('Error fetching POIs:', error);
+    }
+}
+
+fetchPOIs();
+
+
 // Adding Marker
 
 const marker = L.marker([40.748708, -73.985433]).addTo(mymap);
